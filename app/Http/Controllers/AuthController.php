@@ -12,17 +12,17 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        try{
-            $request->only('email', 'password');
+        try {
+            $credentials = $request->only('email', 'password');
 
-            $user = User::where('email', $request->email)->first();
-            if(!$user || !Hash::check($request->password, $user->password)){
+            if (!Auth::attempt($credentials)) {
                 return response()->json([
                     'status' => 400,
-                    'message' => 'Wrong Email of Password'
+                    'message' => 'Wrong Email or Password'
                 ], 400);
             }
 
+            $user = $request->user();
             $token = $user->createToken('user')->plainTextToken;
 
             return response()->json([
@@ -30,12 +30,13 @@ class AuthController extends Controller
                 'message' => 'Login Successfully',
                 'token' => $token
             ], 200);
-        }catch(Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
             ], 401);
         }
     }
+
 
     public function logout()
     {

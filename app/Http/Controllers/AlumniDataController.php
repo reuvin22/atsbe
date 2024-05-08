@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlumniData;
 use App\Models\User;
 use App\Models\AlumniRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class AlumniDataController extends Controller
+class AlumniDataController
 {
     function createBulk($request)
     {
+        DB::beginTransaction();
         try {
             $data = $request->input('data');
             $actionType = $request->input('actionType');
@@ -27,7 +30,9 @@ class AlumniDataController extends Controller
                     $data['relatedOrNot'],
                     $data['course'],
                     $data['employmentStatus'],
-                    $data['gender']
+                    $data['gender'],
+                    $data['email'],
+                    $data['employmentType']
                 );
             break;
 
@@ -36,13 +41,19 @@ class AlumniDataController extends Controller
                     $data['fname'],
                     $data['mname'],
                     $data['lname'],
-                    $data['role'],
+                    $data['email'],
                     Hash::make($data['password']),
-                    $data['email']
+                    $data['role'],
                 );
             break;
         }
+        DB::commit();
+            return response()->json([
+                'message' => 'Successfully created',
+                'status' => 'success'
+            ], 200);
         }catch(\Exception $ex) {
+            DB::rollBack();
             return response()->json(
                 [
                     'message' => $ex->getMessage()
@@ -51,8 +62,8 @@ class AlumniDataController extends Controller
         }
     }
 
-    private function insertAlumniData($fname, $mname, $lname, $studentNumber, $civilStatus, $year, $relatedOrNot, $course, $employmentStatus, $gender){
-        AlumniRecord::create([
+    private function insertAlumniData($fname, $mname, $lname, $studentNumber, $civilStatus, $year, $relatedOrNot, $course, $employmentStatus, $gender, $email, $employmentType){
+        AlumniData::create([
             'fname' => $fname,
             'mname' => $mname,
             'lname' => $lname,
@@ -62,7 +73,9 @@ class AlumniDataController extends Controller
             'relatedOrNot' => $relatedOrNot,
             'course' => $course,
             'employmentStatus' => $employmentStatus,
-            'gender' => $gender
+            'gender' => $gender,
+            'email' => $email,
+            'employmentType' => $employmentType
         ]);
     }
 

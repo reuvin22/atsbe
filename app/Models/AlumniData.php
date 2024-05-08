@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AlumniRecord extends Model
+class AlumniData extends Model
 {
     use HasFactory;
 
@@ -19,6 +19,8 @@ class AlumniRecord extends Model
         'relatedOrNot',
         'course',
         'employmentStatus',
-        'gender'
+        'gender',
+        'email',
+        'employmentType'
     ];
 }
