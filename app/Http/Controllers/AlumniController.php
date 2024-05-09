@@ -38,12 +38,26 @@ class AlumniController extends Controller
         $genderM = AlumniData::where('gender', 'Male')->count();
         $genderF = AlumniData::where('gender', 'Female')->count();
         $students = AlumniData::all()->count();
+        $freelancer = AlumniData::where('employmentType', 'Freelancer')->count();
+        $part_time = AlumniData::where('employmentType', 'Part Time')->count();
+        $full_time = AlumniData::where('employmentType', 'Full Time')->count();
+        $employed = AlumniData::where('employmentStatus', 'Employed')->count();
+        $unemployed = AlumniData::where('employmentStatus', 'Unemployed')->count();
+        $related = AlumniData::where('relatedOrNot', 'Related')->count();
+        $not_related = AlumniData::where('relatedOrNot', 'Not Related')->count();
         return response()->json([
             'status' => 200,
             'data' => [
                 'male' => $genderM,
                 'female' => $genderF,
-                'total_students' => $students
+                'total_students' => $students,
+                'freelancer' => $freelancer,
+                'part_time' => $part_time,
+                'full_time' => $full_time,
+                'employed' => $employed,
+                'unemployed' => $unemployed,
+                'related' => $related,
+                'not_related' => $not_related
             ]
         ], 200);
     }
@@ -151,8 +165,19 @@ class AlumniController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        $actionType = $request->input('actionType');
+        switch($actionType){
+            case 'deleteUser':
+                $delete = User::find($id);
+                $delete->delete();
+            break;
+
+            default:
+                return null;
+            break;
+        }
+        return response()->json(['success' => true], 200);
     }
 }

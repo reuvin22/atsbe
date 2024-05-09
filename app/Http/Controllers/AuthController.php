@@ -28,8 +28,10 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Login Successfully',
-                'token' => $token
+                'token' => $token,
+                'user' => $user
             ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
