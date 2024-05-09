@@ -10,11 +10,12 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('alumni', AlumniController::class);
-Route::apiResource('register', AlumniController::class);
 Route::post('login', [AuthController::class, 'login']);
+Route::apiResource('register', AlumniController::class);
 Route::middleware('auth:sanctum')->group( function(){
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('alumni-list', AlumniController::class);
     Route::apiResource('delete-alumni-list', AlumniController::class);
     Route::apiResource('users', AlumniController::class);
+    // Route::apiResource('register', AlumniController::class);
 });

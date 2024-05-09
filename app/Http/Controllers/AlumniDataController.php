@@ -89,4 +89,28 @@ class AlumniDataController
             'role' => $role
         ]);
     }
+
+    function updateData($request, $id){
+        $data = $request->input('data');
+        $actionType = $request->input('actionType');
+
+        switch($actionType){
+            case 'updateUser':
+                $userData = User::find($id);
+                if($userData){
+                    $userData->fname = $data['fname'];
+                    $userData->lname = $data['lname'];
+                    $userData->mname = $data['mname'];
+                    $userData->role = $data['role'];
+                    $userData->email = $data['email'];
+                    $userData->password = Hash::make($data['password']);
+                    $userData->save();
+                }
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Data updated successfully'
+                ], 200);
+            break;
+        }
+    }
 }

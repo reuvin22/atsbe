@@ -157,9 +157,9 @@ class AlumniController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AlumniDataController $service, Request $request, string $id)
     {
-        //
+        return $service->updateData($request, $id);
     }
 
     /**
